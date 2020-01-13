@@ -1,0 +1,32 @@
+opam-version: "2.0"
+version: "1.0.0"
+
+maintainer: "d.plaindoux@free.fr"
+authors: [
+  "Didier Plaindoux <d.plaindoux@free.fr>"
+]
+
+license: "MIT"
+tags: ["library" "parser-combinator"]
+homepage: "https://github.com/d-plaindoux/transept"
+dev-repo: "git+https://github.com/d-plaindoux/transept.git"
+bug-reports: "https://github.com/d-plaindoux/transept/issues"
+
+build: [
+  [ "dune" "subst" ]
+  [ "dune" "build" "-p" name "-j" jobs ]
+  [ "dune" "runtest" "-p" name ] {with-test}
+  [ "dune" "build" "@doc" "-p" name ] {with-doc}
+]
+
+depends: [
+  "ocaml" { >= "4.08.0" }
+  "dune"
+  "alcotest" {with-test}
+  "odoc"{with-doc}
+]
+
+synopsis: "TODO"
+description:"""
+TODO
+"""
