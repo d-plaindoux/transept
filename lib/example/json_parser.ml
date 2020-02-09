@@ -1,27 +1,27 @@
-open Json
-
 module Lexeme = Transept_extension.Lexeme
 module Genlex = Transept_extension.Genlex
 
 let keywords = [ "{"; "}"; "["; "]"; ","; ":"; "null"; "true"; "false" ]
 
 module Make (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
-  module Token = Genlex.Token (Parser)
+  open Genlex.Token (Parser)
+
   open Transept_parser.Utils
+  open Json
   open Parser
 
   let keywords = []
 
+  let null = kwd "null" <$> constant Null
+
   let bool =
-    Token.kwd "true"
+    kwd "true"
     <$> constant @@ Bool true
-    <|> (Token.kwd "false" <$> constant @@ Bool false)
+    <|> (kwd "false" <$> constant @@ Bool false)
 
-  let null = Token.kwd "null" <$> constant Null
-
-  (** TODO Review this case ASAP *)
+  (** Unable to use GADT *)
   let stringValue =
-    Token.string <$> function
+    string <$> function
     | Lexeme.String s -> s
     | _ -> failwith "Impossible"
 
@@ -29,35 +29,30 @@ module Make (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
     stringValue <$> function
     | s -> String s
 
-  (** TODO Review this case ASAP *)
+  (** Unable to use GADT *)
   let number =
-    Token.float <$> function
+    float <$> function
     | Lexeme.Float f -> Number f
     | _ -> failwith "Impossible"
 
-  let rec json () =
-    null <|> bool <|> do_lazy record <|> do_lazy array <|> string <|> number
-
-  and array () =
+  let rec array () =
     let item = do_lazy json in
-    (Token.kwd "["
-     &> opt (item <&> optrep (Token.kwd "," &> item))
-     <& Token.kwd "]"
-     <$> function
+    (kwd "[" &> opt (item <&> optrep (kwd "," &> item)) <& kwd "]" <$> function
      | None -> []
      | Some (e, l) -> e :: l)
     <$> fun r -> Array r
 
   and record () =
     let item = do_lazy json in
-    let attribute = stringValue <& Token.kwd ":" <&> item in
-    (Token.kwd "{"
-     &> opt (attribute <&> optrep (Token.kwd "," &> attribute))
-     <& Token.kwd "}"
+    let attribute = stringValue <& kwd ":" <&> item in
+    (kwd "{" &> opt (attribute <&> optrep (kwd "," &> attribute)) <& kwd "}"
      <$> function
      | None -> []
      | Some (e, l) -> e :: l)
     <$> fun l -> Record l
+
+  and json () =
+    null <|> bool <|> do_lazy record <|> do_lazy array <|> string <|> number
 
   let parse = json () <& eos
 end

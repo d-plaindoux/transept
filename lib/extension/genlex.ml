@@ -1,7 +1,7 @@
 module Make (Parser : Transept_specs.PARSER with type e = char) = struct
   open Transept_parser.Utils
-
   open Lexeme
+
   open Literals.Make (Parser)
 
   let tokenizer s l =
@@ -17,7 +17,7 @@ module Make (Parser : Transept_specs.PARSER with type e = char) = struct
        <|> (string <$> fun e -> String e)
        <|> (char <$> fun e -> Char e)
        <|> (keywords <$> fun e -> Keyword e))
-       <|> (ident <$> fun e -> Ident e)
+    <|> (ident <$> fun e -> Ident e)
     <& skipped
 
   let tokenizer_with_spaces l = tokenizer spaces l
@@ -50,4 +50,3 @@ module Token (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
 
   let kwd s = Parser.(any <?> fun a -> a = Lexeme.Keyword s)
 end
-
