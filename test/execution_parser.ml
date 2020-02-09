@@ -63,7 +63,7 @@ let should_parse_lookahead () =
   let expected = Some 'a', true
   and computed =
     Response.fold
-      Parser.(parse ((lookahead @@ atom 'a') &> atom 'a') (build "a"))
+      Parser.(parse (lookahead @@ atom 'a' &> atom 'a') (build "a"))
       (fun (_, a, b) -> Some a, b)
       (fun (_, b) -> None, b)
   in
@@ -77,8 +77,14 @@ let test_cases =
     Alcotest.
       [
         test_case "Should parse do_try" `Quick should_parse_do_try;
-        test_case "Should parse do_try and fail" `Quick should_parse_do_try_and_fail;
+        test_case
+          "Should parse do_try and fail"
+          `Quick
+          should_parse_do_try_and_fail;
         test_case "Should parse not a" `Quick should_parse_not_a;
-        test_case "Should parse not a and fail" `Quick should_parse_not_a_and_fail;
+        test_case
+          "Should parse not a and fail"
+          `Quick
+          should_parse_not_a_and_fail;
         test_case "Should parse lookahead" `Quick should_parse_lookahead;
       ] )

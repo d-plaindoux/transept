@@ -2,4 +2,4 @@
  (name transept_example)
  (public_name transept.example)
  (modules_without_implementation transept_example)
- (libraries transept.parser transept.extension))
+ (libraries transept.stream transept.parser transept.extension))

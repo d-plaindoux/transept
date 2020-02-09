@@ -1,6 +1,19 @@
-module Parser = Transept_extension.Parser.Make (struct
-  type t = char
-end)
+module Utils = Transept_parser.Utils
+module CharParser = Transept_extension.Parser.CharParser
+module Stream = Transept_stream.Via_parser (CharParser)
+
+let build s =
+  let module Genlex = Transept_extension.Genlex.Make (CharParser) in
+  let keywords = Transept_example.Json_parser.keywords in
+  let tokenizer = Genlex.tokenizer_with_spaces keywords in
+  Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s)
+
+module Parser =
+  Transept_parser.Parser.Make_via_stream
+    (Stream)
+    (struct
+      type t = Transept_extension.Lexeme.t
+    end)
 
 module Json = Transept_example.Json
 module Json_parser = Transept_example.Json_parser.Make (Parser)
@@ -8,21 +21,6 @@ module Response = Parser.Response
 module Json_pp = Transept_example.Json_pp
 
 let json = Alcotest.testable Json_pp.pp (Json_pp.eq ( = ))
-
-let build s = Parser.Stream.build @@ Transept_parser.Utils.chars_of_string s
-
-let should_parse_spaces () =
-  let expected = Some (), true
-  and computed =
-    Response.fold
-      (Parser.parse Json_parser.skipped (build " \t"))
-      (fun (_, a, c) -> Some a, c)
-      (fun (_, c) -> None, c)
-  in
-  Alcotest.(check (pair (option unit) bool))
-    "should_parse_spaces"
-    expected
-    computed
 
 let should_parse_null () =
   let expected = Some Json.Null, true
@@ -199,7 +197,6 @@ let test_cases =
   ( "Try json parsers",
     Alcotest.
       [
-        test_case "Should parse spaces" `Quick should_parse_spaces;
         test_case "Should parse null" `Quick should_parse_null;
         test_case "Should parse true" `Quick should_parse_true;
         test_case "Should parse false" `Quick should_parse_false;

@@ -1,5 +1,5 @@
 (library
  (name transept_extension)
  (public_name transept.extension)
- (modules_without_implementation transept_extension)
+ (modules_without_implementation transept_extension lexeme)
  (libraries transept.parser transept.stream))

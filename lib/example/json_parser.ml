@@ -1,44 +1,59 @@
 open Json
 
-module Make (P : Transept_specs.PARSER with type e = char) = struct
-  module U = Transept_parser.Utils
-  module R = P.Response
-  module S = P.Stream
-  module L = Transept_extension.Literals.Make (P)
-  include P
+module Lexeme = Transept_extension.Lexeme
+module Genlex = Transept_extension.Genlex
 
-  let skipped = optrep L.spaces <$> U.constant ()
+let keywords = [ "{"; "}"; "["; "]"; ","; ":"; "null"; "true"; "false" ]
 
-  let skip p = skipped &> p <& skipped
+module Make (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
+  module Token = Genlex.Token (Parser)
+  open Transept_parser.Utils
+  open Parser
 
-  let kwd s = skip (atoms @@ U.chars_of_string s)
+  let keywords = []
 
   let bool =
-    kwd "true"
-    <$> U.constant @@ Bool true
-    <|> (kwd "false" <$> U.constant @@ Bool false)
+    Token.kwd "true"
+    <$> constant @@ Bool true
+    <|> (Token.kwd "false" <$> constant @@ Bool false)
 
-  let null = kwd "null" <$> U.constant Null
+  let null = Token.kwd "null" <$> constant Null
 
-  let number = skip L.float <$> fun f -> Number f
+  (** TODO Review this case ASAP *)
+  let stringValue =
+    Token.string <$> function
+    | Lexeme.String s -> s
+    | _ -> failwith "Impossible"
 
-  let string = skip L.string <$> fun s -> String s
+  let string =
+    stringValue <$> function
+    | s -> String s
+
+  (** TODO Review this case ASAP *)
+  let number =
+    Token.float <$> function
+    | Lexeme.Float f -> Number f
+    | _ -> failwith "Impossible"
 
   let rec json () =
-    skip
-      (null <|> bool <|> do_lazy record <|> do_lazy array <|> string <|> number)
+    null <|> bool <|> do_lazy record <|> do_lazy array <|> string <|> number
 
   and array () =
     let item = do_lazy json in
-    (kwd "[" &> opt (item <&> optrep (kwd "," &> item)) <& kwd "]" <$> function
+    (Token.kwd "["
+     &> opt (item <&> optrep (Token.kwd "," &> item))
+     <& Token.kwd "]"
+     <$> function
      | None -> []
      | Some (e, l) -> e :: l)
     <$> fun r -> Array r
 
   and record () =
     let item = do_lazy json in
-    let attribute = skip L.string <& kwd ":" <&> item in
-    (kwd "{" &> opt (attribute <&> optrep (kwd "," &> attribute)) <& kwd "}"
+    let attribute = stringValue <& Token.kwd ":" <&> item in
+    (Token.kwd "{"
+     &> opt (attribute <&> optrep (Token.kwd "," &> attribute))
+     <& Token.kwd "}"
      <$> function
      | None -> []
      | Some (e, l) -> e :: l)
