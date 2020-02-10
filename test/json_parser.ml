@@ -183,7 +183,7 @@ let should_parse_json () =
   and computed =
     Response.fold
       (Parser.parse
-         (Json_parser.record ())
+         (Json_parser.json ())
          (build "{ \"a\" : 12, \"b\" : [{ \"a\" : 12, \"b\" : [] }] }"))
       (fun (_, a, b) -> Some a, b)
       (fun (_, b) -> None, b)
@@ -192,6 +192,17 @@ let should_parse_json () =
     "should_parse_json"
     expected
     computed
+
+let should_parse_a_large_json () =
+  let content = Ioutils.read_fully "samples/127k.json" in
+  let expected = "OK"
+  and computed =
+    Response.fold
+      (Parser.parse (Json_parser.json ()) (build content))
+      (Utils.constant "OK")
+      (fun (s,_) -> "Error at char <" ^ (string_of_int @@ Stream.position s) ^ ">\n")
+  in
+  Alcotest.(check string) "should_parse_a_large_json" expected computed
 
 let test_cases =
   ( "Try json parsers",
@@ -215,4 +226,5 @@ let test_cases =
           should_parse_record_with_singleton;
         test_case "Should parse record" `Quick should_parse_record;
         test_case "Should parse json" `Quick should_parse_json;
+        test_case "Should parse a large json" `Quick should_parse_a_large_json;
       ] )
