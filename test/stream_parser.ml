@@ -28,7 +28,7 @@ let should_read_a_second_string () =
 
 let should_read_nothing () =
   let expected = None
-  and computed = fst @@ Stream.Stream.next (build tokenizer "") in
+  and computed = fst @@ Stream.next (build tokenizer "") in
   Alcotest.(check (option string))
     "should_read_a_second_string"
     expected

@@ -14,8 +14,8 @@ module Monadic_via_response (R : Transept_specs.RESPONSE) = struct
         fold
           (f a s)
           (fun (s, b, consumed_2) -> success (s, b, consumed_1 || consumed_2))
-          (fun (pos, consumed) -> failure (pos, consumed)))
-      (fun (pos, consumed) -> failure (pos, consumed))
+          (fun (s, consumed) -> failure (s, consumed)))
+      (fun (s, consumed) -> failure (s, consumed))
 end
 
 module Basic_via_response_and_stream
@@ -142,6 +142,7 @@ struct
 
   let sequence optional p s =
     let open R in
+    (* sequence is tail recursive *)
     let rec sequence s aux b =
       fold
         (p s)

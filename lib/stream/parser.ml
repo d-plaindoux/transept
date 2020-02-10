@@ -7,12 +7,9 @@ module Make (Parser : Transept_specs.PARSER) = struct
     let build p s = p, s
   end
 
-  module Stream = struct
-    module Builder = Build_via_stream
+  module Builder = Build_via_stream
 
-    type nonrec 'a t = 'a t
-
-    let build = Builder.build
+  let build = Build_via_stream.build
 
     let position = function
       | _, s -> Parser.Stream.position s
@@ -22,14 +19,5 @@ module Make (Parser : Transept_specs.PARSER) = struct
           Parser.Response.fold
             (Parser.parse p s)
             (fun (s, a, _) -> Some a, (p, s))
-            (fun _ -> None, (p, s))
-  end
-
-  module Builder = Build_via_stream
-
-  let build = Build_via_stream.build
-
-  let position = Stream.position
-
-  let next = Stream.next
+            (fun (s, _) -> None, (p, s))
 end

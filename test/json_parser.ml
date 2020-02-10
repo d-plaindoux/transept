@@ -200,7 +200,8 @@ let should_parse_a_large_json () =
     Response.fold
       (Parser.parse (Json_parser.json ()) (build content))
       (Utils.constant "OK")
-      (fun (s,_) -> "Error at char <" ^ (string_of_int @@ Stream.position s) ^ ">\n")
+      (fun (s, _) ->
+        "Error at char <" ^ (string_of_int @@ Stream.position s) ^ ">\n")
   in
   Alcotest.(check string) "should_parse_a_large_json" expected computed
 
