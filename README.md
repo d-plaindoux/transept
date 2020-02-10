@@ -1,6 +1,6 @@
 # Transept
 
-An OCaml generalised parser combinator library.
+An OCaml modular generalised parser combinator library.
 
 # LICENSE 
 
