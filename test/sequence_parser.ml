@@ -5,7 +5,7 @@ end)
 module Stream = Parser.Stream
 module Response = Parser.Response
 
-let build s = Stream.build @@ Transept_core.Utils.chars_of_string s
+let build s = Stream.build @@ Transept_utils.Utils.chars_of_string s
 
 let should_parse_two_chars () =
   let expected = Some ('a', 'b'), true

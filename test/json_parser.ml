@@ -1,4 +1,4 @@
-module Utils = Transept_core.Utils
+module Utils = Transept_utils.Utils
 module CharParser = Transept_extension.Parser.CharParser
 module Stream = Transept_stream.Via_parser (CharParser)
 

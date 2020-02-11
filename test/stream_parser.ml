@@ -2,7 +2,7 @@ module Parser = Transept_extension.Parser.Make (struct
   type t = char
 end)
 
-module Utils = Transept_core.Utils
+module Utils = Transept_utils.Utils
 module Literals = Transept_extension.Literals.Make (Parser)
 module Stream = Transept_stream.Via_parser (Parser)
 
@@ -27,8 +27,7 @@ let should_read_a_second_string () =
     computed
 
 let should_read_nothing () =
-  let expected = None
-  and computed = fst @@ Stream.next (build tokenizer "") in
+  let expected = None and computed = fst @@ Stream.next (build tokenizer "") in
   Alcotest.(check (option string))
     "should_read_a_second_string"
     expected

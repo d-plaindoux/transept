@@ -2,4 +2,4 @@
  (name transept_extension)
  (public_name transept.extension)
  (modules_without_implementation transept_extension)
- (libraries transept.core transept.stream))
+ (libraries transept.utils transept.core transept.stream))

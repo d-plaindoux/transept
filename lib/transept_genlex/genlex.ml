@@ -1,5 +1,5 @@
 module Make (Parser : Transept_specs.PARSER with type e = char) = struct
-  open Transept_core.Utils
+  open Transept_utils.Utils
   open Lexeme
 
   open Transept_extension.Literals.Make (Parser)

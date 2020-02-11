@@ -1,3 +1,5 @@
+module Utils = Transept_utils.Utils
+
 module Monadic_via_response (R : Transept_specs.RESPONSE) = struct
   let ( <$> ) p f s =
     let open R in

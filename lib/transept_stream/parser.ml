@@ -11,13 +11,13 @@ module Make (Parser : Transept_specs.PARSER) = struct
 
   let build = Build_via_stream.build
 
-    let position = function
-      | _, s -> Parser.Stream.position s
+  let position = function
+    | _, s -> Parser.Stream.position s
 
-    let next = function
-      | p, s ->
-          Parser.Response.fold
-            (Parser.parse p s)
-            (fun (s, a, _) -> Some a, (p, s))
-            (fun (s, _) -> None, (p, s))
+  let next = function
+    | p, s ->
+        Parser.Response.fold
+          (Parser.parse p s)
+          (fun (s, a, _) -> Some a, (p, s))
+          (fun (s, _) -> None, (p, s))
 end
