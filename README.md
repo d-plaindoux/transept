@@ -4,7 +4,7 @@ An OCaml modular generalised parser combinator library.
 
 # Parsing arithmetic expressions
 
-This example is the traditional expression language. This can be represented by the following abstract data types. 
+This example is the traditional arithmetic expression language. This can be represented by the following abstract data types. 
 
 ```ocaml
 type operation =
@@ -18,8 +18,7 @@ type expr =
   | BinOp of operation * expr * expr
 ```
 
-`Transept` provides modules in order to help parsers construction. In the next fragment `Utils` contains basic functions like `constant`.
-The `Parser` module is a is parser dedicated to char stream analysis and `Literals`is library dedicated to string, float etc. parsing. 
+`Transept` provides modules in order to help parsers construction. In the next fragment `Utils` contains basic functions like `constant`. The `Parser` module is a is parser dedicated to char stream analysis and `Literals`is dedicated to string, float etc. parsing. 
 
 ```ocaml
 module Utils = Transept.Utils
