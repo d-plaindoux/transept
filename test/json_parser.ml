@@ -1,24 +1,24 @@
-module Utils = Transept_parser.Utils
+module Utils = Transept_core.Utils
 module CharParser = Transept_extension.Parser.CharParser
 module Stream = Transept_stream.Via_parser (CharParser)
 
 let build s =
-  let module Genlex = Transept_extension.Genlex.Make (CharParser) in
-  let keywords = Transept_example.Json_parser.keywords in
+  let module Genlex = Transept_genlex.Genlex.Make (CharParser) in
+  let keywords = Transept_json.Parser.keywords in
   let tokenizer = Genlex.tokenizer_with_spaces keywords in
   Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s)
 
 module Parser =
-  Transept_parser.Parser.Make_via_stream
+  Transept_core.Parser.Make_via_stream
     (Stream)
     (struct
-      type t = Transept_extension.Lexeme.t
+      type t = Transept_genlex.Lexeme.t
     end)
 
-module Json = Transept_example.Json
-module Json_parser = Transept_example.Json_parser.Make (Parser)
+module Json = Transept_json.Type
+module Json_parser = Transept_json.Parser.Make (Parser)
 module Response = Parser.Response
-module Json_pp = Transept_example.Json_pp
+module Json_pp = Transept_json.PrettyPrinter
 
 let json = Alcotest.testable Json_pp.pp (Json_pp.eq ( = ))
 

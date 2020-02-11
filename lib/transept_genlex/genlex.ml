@@ -1,8 +1,8 @@
 module Make (Parser : Transept_specs.PARSER with type e = char) = struct
-  open Transept_parser.Utils
+  open Transept_core.Utils
   open Lexeme
 
-  open Literals.Make (Parser)
+  open Transept_extension.Literals.Make (Parser)
 
   let tokenizer s l =
     let open Parser in

@@ -1,5 +1,5 @@
 module Make (Parser : Transept_specs.PARSER with type e = char) = struct
-  open Transept_parser.Utils
+  open Transept_core.Utils
   open Parser
 
   let spaces = in_list [ ' '; '\t'; '\r'; '\n' ] <$> constant ()

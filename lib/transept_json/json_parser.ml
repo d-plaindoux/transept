@@ -1,12 +1,12 @@
-module Lexeme = Transept_extension.Lexeme
-module Genlex = Transept_extension.Genlex
+module Lexeme = Transept_genlex.Lexeme
+module Genlex = Transept_genlex.Genlex
 
 let keywords = [ "{"; "}"; "["; "]"; ","; ":"; "null"; "true"; "false" ]
 
 module Make (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
   open Genlex.Token (Parser)
 
-  open Transept_parser.Utils
+  open Transept_core.Utils
   open Json
   open Parser
 

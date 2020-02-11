@@ -1,0 +1,5 @@
+(library
+ (name transept_core)
+ (public_name transept.core)
+ (modules_without_implementation transept_core)
+ (libraries transept.specs transept.stream))

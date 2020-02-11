@@ -1,0 +1,5 @@
+(library
+ (name transept_genlex)
+ (public_name transept.genlex)
+ (modules_without_implementation transept_genlex lexeme)
+ (libraries transept.core transept.stream transept.extension))

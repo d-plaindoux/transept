@@ -1,4 +1,4 @@
-module Utils = Transept_parser.Utils
+module Utils = Transept_core.Utils
 module Stream = Transept_stream.Via_list
 
 let build s = Stream.build @@ Utils.chars_of_string s
