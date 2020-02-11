@@ -30,3 +30,4 @@ _opam/
 
 # Idea directory
 .idea/
+*.iml
