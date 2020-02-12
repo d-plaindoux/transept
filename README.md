@@ -24,7 +24,7 @@ type expr =
 
 ## Parsers with a direct style 
 
-Direct style means we parse char stream. In this case all characters are significant even spaces. 
+Direct style means we parse a stream of characters. In this case all characters are significant even spaces. 
 
 ### Required modules
 
@@ -111,7 +111,10 @@ module Parser =
     (struct
       type t = Transept_genlex.Lexeme.t
     end)
+
+module Token = Transept_genlex.Genlex.Token (Parser) 
 ```
+
 
 ### Operation parser
 
@@ -121,6 +124,8 @@ Therefore we can propose a first parser dedicated to operations.
 let operator = 
     let open Utils in
     let open Parser in
+    let open Token in
+    let in
     (kwd "+" <$> constant Add)   <|>
     (kwd "-" <$> constant Minus) <|>
     (kwd "*" <$> constant Mult)  <|>
@@ -136,6 +141,7 @@ let expr =
     (* sexpr ::= float | '(' expr ')' *)
     let rec sexpr () =
       let open Parser in
+      let open Token in
       float <$> (fun f -> Number f) <|> (kwd "(" &> do_lazy expr <& kwd ")")
     
     (* expr ::= sexpr (operator expr)? *)
@@ -157,7 +163,8 @@ let parse s =
   let open Parser in
   let module Genlex = Transept_genlex.Genlex.Make (CharParser) in
   let tokenizer = Genlex.tokenizer_with_spaces ["+"; "/"; "*"; "/"; "("; ")"] in
-  Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s)
+  let stream Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s) in
+  parse (expr ()) stream
 ```
 
 With this solution whitespaces are skipped by the generic lexer. It means `1 + ( 2+ 3)` is parsed correctly now.  
