@@ -163,7 +163,7 @@ let parse s =
     let open Utils in
     let open Parser in
     let tokenizer = Genlex.tokenizer_with_spaces ["+"; "/"; "*"; "/"; "("; ")"] in
-    let stream Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s) in
+    let stream = Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s) in
     parse (expr ()) stream
 ```
 
