@@ -78,9 +78,9 @@ Finally a sentence can be easily parsed.
 
 ```ocaml
 let parse s =
-  let open Utils in
-  let open CharParser in
-  parse (expr ()) @@ Stream.build @@ chars_of_string s
+    let open Utils in
+    let open CharParser in
+    parse (expr ()) @@ Stream.build @@ chars_of_string s
 ```
 
 With this solution we don't skip whitespaces. It means `1+(2+3)` is parsed when `1 + (2 + 3)` not!  
@@ -100,6 +100,7 @@ parsing using another parser.
 module Utils = Transept_utils.Utils
 module CharParser = Transept_extension.Parser.CharParser
 module Stream = Transept_stream.Via_parser (CharParser)
+module Genlex = Transept_genlex.Genlex.Make (CharParser)
 ```
 
 ### Main parser
@@ -159,12 +160,11 @@ of lexemes. The second one `Parser` is used to parse the previous lexeme stream.
 
 ```ocaml
 let parse s =
-  let open Utils in
-  let open Parser in
-  let module Genlex = Transept_genlex.Genlex.Make (CharParser) in
-  let tokenizer = Genlex.tokenizer_with_spaces ["+"; "/"; "*"; "/"; "("; ")"] in
-  let stream Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s) in
-  parse (expr ()) stream
+    let open Utils in
+    let open Parser in
+    let tokenizer = Genlex.tokenizer_with_spaces ["+"; "/"; "*"; "/"; "("; ")"] in
+    let stream Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s) in
+    parse (expr ()) stream
 ```
 
 With this solution whitespaces are skipped by the generic lexer. It means `1 + ( 2+ 3)` is parsed correctly now.  
