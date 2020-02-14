@@ -16,6 +16,8 @@ module Via_list = struct
   let position = function
     | p, _ -> p
 
+  let is_empty s = snd s = []
+
   let next = function
     | p, [] -> None, (p, [])
     | p, e :: l -> Some e, (p + 1, l)

@@ -34,9 +34,8 @@ struct
 
   let eos s =
     let open R in
-    match S.next s with
-    | Some _, s -> failure (s, false)
-    | None, s -> success (s, (), false)
+    let open S in
+    if is_empty s then success (s, (), false) else failure (s, false)
 
   let any s =
     let open R in

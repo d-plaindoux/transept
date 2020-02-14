@@ -13,6 +13,8 @@ module CORE : sig
 
   val position : 'a t -> int
 
+  val is_empty : 'a t -> bool
+
   val next : 'a t -> 'a option * 'a t
 end
 

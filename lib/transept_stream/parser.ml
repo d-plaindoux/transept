@@ -14,10 +14,19 @@ module Make (Parser : Transept_specs.PARSER) = struct
   let position = function
     | _, s -> Parser.Stream.position s
 
+  let is_empty =
+    let open Transept_utils.Utils in
+    function
+    | _, s ->
+        Parser.Response.fold
+          Parser.(parse eos s)
+          (constant true)
+          (constant false)
+
   let next = function
     | p, s ->
         Parser.Response.fold
-          (Parser.parse p s)
+          Parser.(parse p s)
           (fun (s, a, _) -> Some a, (p, s))
           (fun (s, _) -> None, (p, s))
 end
