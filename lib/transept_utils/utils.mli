@@ -1,7 +1,6 @@
 val constant : 'a -> 'b -> 'a
-(** Produce a function that returns its first argument.
-    [const a b] returns always [a].
- *)
+(** Produce a function that returns its first argument. [const a b] returns
+    always [a]. *)
 
 val uncurry : ('a -> 'b -> 'c) -> 'a * 'b -> 'c
 

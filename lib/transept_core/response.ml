@@ -13,4 +13,5 @@ module Basic = struct
     match response with
     | Success (s, a, c) -> fSuccess (s, a, c)
     | Failure (s, c) -> fFailure (s, c)
+  ;;
 end

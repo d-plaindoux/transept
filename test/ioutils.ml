@@ -8,6 +8,8 @@ let read_fully filename =
       text := !text ^ "\n" ^ input_line chan
     done;
     !text
-  with End_of_file ->
+  with
+  | End_of_file ->
     close_in chan;
     !text
+;;

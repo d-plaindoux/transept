@@ -18,41 +18,41 @@ module Make (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
     kwd "true"
     <$> constant @@ Bool true
     <|> (kwd "false" <$> constant @@ Bool false)
+  ;;
 
   (** Unable to use GADT *)
   let stringValue =
-    string <$> function
-    | Lexeme.String s -> s
-    | _ -> failwith "Impossible"
+    string <$> (function Lexeme.String s -> s | _ -> failwith "Impossible")
+  ;;
 
-  let string =
-    stringValue <$> function
-    | s -> String s
+  let string = stringValue <$> (function s -> String s)
 
   (** Unable to use GADT *)
   let number =
-    float <$> function
-    | Lexeme.Float f -> Number f
-    | _ -> failwith "Impossible"
+    float
+    <$> (function Lexeme.Float f -> Number f | _ -> failwith "Impossible")
+  ;;
 
   let rec array () =
     let item = do_lazy json in
-    (kwd "[" &> opt (item <&> optrep (kwd "," &> item)) <& kwd "]" <$> function
-     | None -> []
-     | Some (e, l) -> e :: l)
-    <$> fun r -> Array r
+    kwd "["
+    &> opt (item <&> optrep (kwd "," &> item))
+    <& kwd "]"
+    <$> (function None -> [] | Some (e, l) -> e :: l)
+    <$> (fun r -> Array r)
 
   and record () =
     let item = do_lazy json in
     let attribute = stringValue <& kwd ":" <&> item in
-    (kwd "{" &> opt (attribute <&> optrep (kwd "," &> attribute)) <& kwd "}"
-     <$> function
-     | None -> []
-     | Some (e, l) -> e :: l)
-    <$> fun l -> Record l
+    kwd "{"
+    &> opt (attribute <&> optrep (kwd "," &> attribute))
+    <& kwd "}"
+    <$> (function None -> [] | Some (e, l) -> e :: l)
+    <$> (fun l -> Record l)
 
   and json () =
     null <|> bool <|> do_lazy record <|> do_lazy array <|> string <|> number
+  ;;
 
   let parse = json () <& eos
 end

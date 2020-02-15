@@ -15,9 +15,8 @@ module Make (Parser : Transept_specs.PARSER with type e = char) = struct
   let natural = rep digit <$> string_of_chars <$> int_of_string
 
   let sign =
-    opt (in_list [ '+'; '-' ]) <$> function
-    | None -> '+'
-    | Some c -> c
+    opt (in_list [ '+'; '-' ]) <$> (function None -> '+' | Some c -> c)
+  ;;
 
   let signed_number = to_list (sign <&> unsigned_number)
 
@@ -25,23 +24,24 @@ module Make (Parser : Transept_specs.PARSER with type e = char) = struct
 
   let rational =
     signed_number
-    <&> (opt @@ to_list (atom '.' <&> unsigned_number) <$> function
-         | None -> []
-         | Some l -> l)
+    <&> ( opt @@ to_list (atom '.' <&> unsigned_number)
+        <$> (function None -> [] | Some l -> l) )
     <$> uncurry ( @ )
+  ;;
 
   let float =
     rational
-    <&> (opt @@ to_list (in_list [ 'e'; 'E' ] <&> signed_number) <$> function
-         | None -> []
-         | Some l -> l)
+    <&> ( opt @@ to_list (in_list [ 'e'; 'E' ] <&> signed_number)
+        <$> (function None -> [] | Some l -> l) )
     <$> uncurry ( @ )
     <$> string_of_chars
     <$> float_of_string
+  ;;
 
   (** TODO reviewed ASAP *)
   let string =
     atom '"' &> optrep @@ not @@ atom '"' <& atom '"' <$> string_of_chars
+  ;;
 
   (** TODO reviewed ASAP *)
   let char = atom '\'' &> not @@ atom '\'' <& atom '\''
