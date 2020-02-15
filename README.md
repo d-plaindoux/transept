@@ -1,6 +1,6 @@
 # Transept
 
-[![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fd-plaindoux%2Ftransept%2Fbadge&style=flat)](https://actions-badge.atrox.dev/d-plaindoux/transept/goto)
+![Transept](https://github.com/d-plaindoux/transept/workflows/Transept/badge.svg)
 
 An OCaml modular generalised parser combinator library.
 
