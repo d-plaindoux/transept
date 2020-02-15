@@ -1,4 +1,4 @@
-name: Preface
+name: Transept
 on: [push]
 jobs:
   run:
