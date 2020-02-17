@@ -1,5 +1,7 @@
 # Transept
 
+![Transept](https://github.com/d-plaindoux/transept/workflows/Transept/badge.svg)
+
 An OCaml modular generalised parser combinator library.
 
 # Parsing arithmetic expressions
