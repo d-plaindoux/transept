@@ -16,7 +16,6 @@ module Make (Parser : Transept_specs.PARSER with type e = char) = struct
 
   let sign =
     opt (in_list [ '+'; '-' ]) <$> (function None -> '+' | Some c -> c)
-  ;;
 
   let signed_number = to_list (sign <&> unsigned_number)
 
@@ -27,7 +26,6 @@ module Make (Parser : Transept_specs.PARSER with type e = char) = struct
     <&> ( opt @@ to_list (atom '.' <&> unsigned_number)
         <$> (function None -> [] | Some l -> l) )
     <$> uncurry ( @ )
-  ;;
 
   let float =
     rational
@@ -36,12 +34,10 @@ module Make (Parser : Transept_specs.PARSER with type e = char) = struct
     <$> uncurry ( @ )
     <$> string_of_chars
     <$> float_of_string
-  ;;
 
   (** TODO reviewed ASAP *)
   let string =
     atom '"' &> optrep @@ not @@ atom '"' <& atom '"' <$> string_of_chars
-  ;;
 
   (** TODO reviewed ASAP *)
   let char = atom '\'' &> not @@ atom '\'' <& atom '\''
