@@ -26,7 +26,7 @@ depends: [
   "odoc"{with-doc}
 ]
 
-synopsis: "TODO"
+synopsis: "Generalized parser combinators"
 description:"""
-TODO
+Explore generalized parser combinators with a modular approach.
 """
