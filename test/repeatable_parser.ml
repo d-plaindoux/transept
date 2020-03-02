@@ -51,6 +51,17 @@ let should_parse_not_char_with_repeatable () =
   Alcotest.(check (pair (option (list char)) bool))
     "should_parse_not_char_with_repeatable" expected computed
 
+let should_partially_parse_with_repeatable () =
+  let expected = None, true
+  and computed =
+    Response.fold
+      Parser.(parse (rep @@ (atom 'a' <& atom '=')) (build "a"))
+      (fun (_, a, b) -> Some a, b)
+      (fun (_, b) -> None, b)
+  in
+  Alcotest.(check (pair (option (list char)) bool))
+    "should_partially_parse_with_repeatable" expected computed
+
 let should_parse_million_chars_with_repeatable () =
   let expected = 1_000_000, true
   and computed =
@@ -72,6 +83,8 @@ let test_cases =
         should_parse_nothing_with_repeatable
     ; test_case "Should parse no char with repeatable" `Quick
         should_parse_not_char_with_repeatable
+    ; test_case "Should partially parse with repeatable" `Quick
+        should_partially_parse_with_repeatable
     ; test_case "Should parse million chars with repeatable" `Quick
         should_parse_million_chars_with_repeatable
     ] )

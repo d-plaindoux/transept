@@ -3,7 +3,7 @@ type 'a t = int * 'a list
 module Build_via_list = struct
   type nonrec 'a t = 'a list -> 'a t
 
-  let build l = 1, l
+  let build l = 0, l
 end
 
 module Via_list = struct

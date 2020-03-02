@@ -46,7 +46,7 @@ module Flow_via_response (R : Transept_specs.RESPONSE) = struct
         fold (pr s)
           (fun (s, b, consumed_2) ->
             success (s, (a, b), consumed_1 || consumed_2))
-          (fun (s, consumed) -> failure (s, consumed)))
+          (fun (s, consumed_2) -> failure (s, consumed_1 || consumed_2)))
       (fun (s, consumed) -> failure (s, consumed))
 
   let ( <& ) pl pr = pl <&> pr <$> fst
@@ -124,7 +124,7 @@ struct
 
   open Flow_via_response (R) (* TODO review this code ASAP *)
 
-  let opt p = do_try p <$> (fun e -> Some e) <|> return None
+  let opt p = p <$> (fun e -> Some e) <|> return None
 
   let sequence optional p s =
     let open R in
@@ -132,10 +132,10 @@ struct
     let rec sequence s aux b =
       fold (p s)
         (fun (s, a, b') -> sequence s (a :: aux) (b || b'))
-        (fun (_, b') ->
+        (fun (s', b') ->
           if aux != [] || optional
           then success (s, List.rev aux, b || b')
-          else failure (s, b || b'))
+          else failure (s', b || b'))
     in
     sequence s [] false
 

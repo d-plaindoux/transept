@@ -85,13 +85,15 @@ end
 module type API = sig
   include CORE
 
-  include BASIC with type 'a t := 'a t
+  include MONAD with type 'a t := 'a t
 
-  include ATOMIC with type 'a t := 'a t and type e := e
+  include BASIC with type 'a t := 'a t
 
   include FLOW with type 'a t := 'a t
 
   include EXECUTION with type 'a t := 'a t
+
+  include ATOMIC with type 'a t := 'a t and type e := e
 
   include REPEATABLE with type 'a t := 'a t
 

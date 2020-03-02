@@ -24,13 +24,15 @@ module Make (Parser : Transept_specs.PARSER with type e = char) = struct
 end
 
 module Token (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
-  let float = Parser.(any <?> (function Lexeme.Float _ -> true | _ -> false))
+  open Parser
 
-  let string = Parser.(any <?> (function Lexeme.String _ -> true | _ -> false))
+  let float = any <?> (function Lexeme.Float _ -> true | _ -> false)
 
-  let char = Parser.(any <?> (function Lexeme.Char _ -> true | _ -> false))
+  let string = any <?> (function Lexeme.String _ -> true | _ -> false)
 
-  let ident = Parser.(any <?> (function Lexeme.Ident _ -> true | _ -> false))
+  let char = any <?> (function Lexeme.Char _ -> true | _ -> false)
 
-  let kwd s = Parser.(any <?> (fun a -> a = Lexeme.Keyword s))
+  let ident = any <?> (function Lexeme.Ident _ -> true | _ -> false)
+
+  let kwd s = any <?> (fun a -> a = Lexeme.Keyword s)
 end

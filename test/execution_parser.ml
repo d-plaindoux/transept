@@ -22,7 +22,7 @@ let should_parse_do_try_and_fail () =
   let expected = None, false
   and computed =
     Response.fold
-      Parser.(parse (do_try @@ atom 'a' <& atom 'b') (build "ac"))
+      Parser.(parse (do_try (atom 'a' <& atom 'b')) (build "ac"))
       (fun (_, a, b) -> Some a, b)
       (fun (_, b) -> None, b)
   in

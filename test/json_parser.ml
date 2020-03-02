@@ -23,14 +23,14 @@ module Json_pp = Transept_json.PrettyPrinter
 let json = Alcotest.testable Json_pp.pp (Json_pp.eq ( = ))
 
 let should_parse_null () =
-  let expected = Some Json.Null, true
+  let expected = (Some Json.Null, true), 4
   and computed =
     Response.fold
       (Parser.parse Json_parser.null (build "null"))
-      (fun (_, a, c) -> Some a, c)
-      (fun (_, c) -> None, c)
+      (fun (s, a, c) -> (Some a, c), Parser.Stream.position s)
+      (fun (s, c) -> (None, c), Parser.Stream.position s)
   in
-  Alcotest.(check (pair (option json) bool))
+  Alcotest.(check (pair (pair (option json) bool) int))
     "should_parse_null" expected computed
 
 let should_parse_true () =
@@ -179,6 +179,18 @@ let should_parse_a_large_json () =
   in
   Alcotest.(check string) "should_parse_a_large_json" expected computed
 
+let should_parse_a_json_not_well_formed () =
+  let content = Ioutils.read_fully "samples/nwff.json" in
+  let expected = false, 17
+  and computed =
+    Response.fold
+      (Parser.parse (Json_parser.json ()) (build content))
+      (fun (s, _, _) -> true, Stream.position s)
+      (fun (s, _) -> false, Stream.position s)
+  in
+  Alcotest.(check (pair bool int))
+    "should_parse_a_json_not_well_formed" expected computed
+
 let test_cases =
   ( "Try json parsers"
   , let open Alcotest in
@@ -198,4 +210,6 @@ let test_cases =
     ; test_case "Should parse record" `Quick should_parse_record
     ; test_case "Should parse json" `Quick should_parse_json
     ; test_case "Should parse a large json" `Quick should_parse_a_large_json
+    ; test_case "Should parse a json not well formed" `Quick
+        should_parse_a_json_not_well_formed
     ] )
