@@ -56,8 +56,7 @@ let test_cases =
   , let open Alcotest in
     [
       test_case "Should parse two chars" `Quick should_parse_two_chars
-    ; test_case "Should not parse two chars" `Quick
-        should_not_parse_two_chars
+    ; test_case "Should not parse two chars" `Quick should_not_parse_two_chars
     ; test_case "Should parse choosing first char" `Quick
         should_parse_choosing_first
     ; test_case "Should parse choosing second char" `Quick
