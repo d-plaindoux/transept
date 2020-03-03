@@ -128,7 +128,6 @@ let operator =
     let open Utils in
     let open Parser in
     let open Token in
-    let in
     (kwd "+" <$> constant Add)   <|>
     (kwd "-" <$> constant Minus) <|>
     (kwd "*" <$> constant Mult)  <|>
