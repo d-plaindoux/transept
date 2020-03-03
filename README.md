@@ -171,6 +171,8 @@ let parse s =
 
 With this solution whitespaces are skipped by the generic lexer. It means `1 + ( 2+ 3)` is parsed correctly now.  
 
+A [JSON Parser](https://github.com/d-plaindoux/transept/blob/master/lib/transept_json/json_parser.ml) has been designed with this approch based on a low level parser producing tokens and a high level parser producing JSON terms from tokens.
+
 # LICENSE 
 
 MIT License
