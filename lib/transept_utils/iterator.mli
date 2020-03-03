@@ -1,3 +1,8 @@
+(** The [Iterator] specifies traditional [fold_left] and [fold_right] function
+    signatures *)
+
+(** {1 Structure anatomy} *)
+
 module CORE : sig
   type _ t
 
@@ -5,5 +10,7 @@ module CORE : sig
 
   val fold_left : ('b -> 'a -> 'b) -> 'b -> 'a t -> 'b
 end
+
+(** {1 API} *)
 
 module type API = module type of CORE

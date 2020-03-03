@@ -2,4 +2,4 @@
  (name transept_specs)
  (public_name transept.specs)
  (modules_without_implementation transept_specs element response stream
-   iterator parser))
+   parser))

@@ -1,4 +1,4 @@
 (library
  (name transept_utils)
  (public_name transept.utils)
- (modules_without_implementation transept_utils))
+ (modules_without_implementation iterator transept_utils))

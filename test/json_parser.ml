@@ -1,5 +1,5 @@
 module Utils = Transept_utils.Utils
-module CharParser = Transept_extension.Parser.CharParser
+module CharParser = Transept_extension.Parser.For_char_list
 module Stream = Transept_stream.Via_parser (CharParser)
 
 let build s =

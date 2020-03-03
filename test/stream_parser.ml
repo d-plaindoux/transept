@@ -1,7 +1,4 @@
-module Parser = Transept_extension.Parser.Make (struct
-  type t = char
-end)
-
+module Parser = Transept_extension.Parser.For_char_list
 module Utils = Transept_utils.Utils
 module Literals = Transept_extension.Literals.Make (Parser)
 module Stream = Transept_stream.Via_parser (Parser)

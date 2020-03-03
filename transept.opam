@@ -23,10 +23,10 @@ depends: [
   "ocaml" { >= "4.08.0" }
   "dune" { >= "1.11" }
   "alcotest" {with-test}
-  "odoc"{with-doc}
+  "odoc" {with-doc}
 ]
 
-synopsis: "Generalized parser combinators"
+synopsis: "Modular generalized parser combinators"
 description:"""
 Explore generalized parser combinators with a modular approach.
 """

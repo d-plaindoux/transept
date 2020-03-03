@@ -1,15 +1,19 @@
+(** Propose a [Stream] implementation from a parser *)
+
 module Make (Parser : Transept_specs.PARSER) : sig
-  type 'a t
+  type 'a r
+  (** The abstract type used for the stream denotation. *)
 
-  module Builder :
+  module Build_via_stream :
     Transept_specs.Stream.BUILDER
-      with type 'a t = 'a Parser.t -> Parser.e Parser.Stream.t -> 'a t
+      with type 'a t = 'a Parser.t -> Parser.e Parser.Stream.t -> 'a r
+  (** The stream builder module with a parser as a source. *)
 
-  val build : 'a Parser.t -> Parser.e Parser.Stream.t -> 'a t
+  (** The stream module with a parser as a source. *)
+  module Stream :
+    Transept_specs.STREAM
+      with type 'a t = 'a r
+       and module Builder = Build_via_stream
 
-  val position : 'a t -> int
-
-  val is_empty : 'a t -> bool
-
-  val next : 'a t -> 'a option * 'a t
+  include module type of Stream
 end

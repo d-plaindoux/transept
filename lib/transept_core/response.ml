@@ -6,7 +6,5 @@ module Basic = struct
   let failure v = Error v
 
   let fold response fSuccess fFailure =
-    match response with
-    | Ok v -> fSuccess v
-    | Error v -> fFailure v
+    (match response with Ok v -> fSuccess v | Error v -> fFailure v)
 end
