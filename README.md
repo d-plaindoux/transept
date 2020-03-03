@@ -85,7 +85,7 @@ let parse s =
     parse (expr ()) @@ Stream.build @@ chars_of_string s
 ```
 
-With this solution we don't skip whitespaces. It means `1+(2+3)` is parsed when `1 + (2 + 3)` not!  
+With this solution we don't skip whitespaces. It means `1+(2+3)` is parsed when `1 + (2 + 3)` is not!  
 
 ## The indirect style
 
