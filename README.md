@@ -2,7 +2,7 @@
 
 ![Transept](https://github.com/d-plaindoux/transept/workflows/Transept/badge.svg)
 
-An OCaml modular generalised parser combinator library.
+An OCaml modular and generalised parser combinator library.
 
 # Parsing arithmetic expressions
 
