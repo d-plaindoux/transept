@@ -119,13 +119,13 @@ module type REPEATABLE = sig
   (** The parse abstract type. *)
 
   val opt : 'a t -> 'a option t
-  (** Define a parser maybe accepting a something. *)
+  (** Define a parser maybe accepting something. *)
 
   val optrep : 'a t -> 'a list t
-  (** Define a parser accepting a something more than once or nothing. *)
+  (** Define a parser accepting something more than once or nothing. *)
 
   val rep : 'a t -> 'a list t
-  (** Define a parser accepting a something more than once. *)
+  (** Define a parser accepting something more than once. *)
 end
 
 (** {1 API} *)
