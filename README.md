@@ -85,7 +85,7 @@ let parse s =
     parse (expr ()) @@ Stream.build @@ chars_of_string s
 ```
 
-With this solution we don't skip whitespaces. It means `1+(2+3)` is parsed when `1 + (2 + 3)` not!  
+With this solution we don't skip whitespaces. It means `1+(2+3)` is parsed when `1 + (2 + 3)` is not!  
 
 ## The indirect style
 
@@ -170,6 +170,8 @@ let parse s =
 ```
 
 With this solution whitespaces are skipped by the generic lexer. It means `1 + ( 2+ 3)` is parsed correctly now.  
+
+A [JSON Parser](https://github.com/d-plaindoux/transept/blob/master/lib/transept_json/json_parser.ml) has been designed with this approch based on a low level parser producing tokens and a high level parser producing JSON terms from tokens.
 
 # LICENSE 
 
