@@ -9,8 +9,8 @@ module type CORE = sig
   module Stream : Stream.API
 
   type e
-  (** The element abstract type. Elements are provided by the stream used
-      during the parsing. *)
+  (** The element abstract type. Elements are provided by the stream used during
+      the parsing. *)
 
   type _ t
   (** The parse abstract type *)
@@ -88,8 +88,8 @@ end
 (** Define atomic parser. *)
 module type ATOMIC = sig
   type e
-  (** The element abstract type. Elements are provided by the stream used
-      during the parsing. *)
+  (** The element abstract type. Elements are provided by the stream used during
+      the parsing. *)
 
   type _ t
   (** The parse abstract type *)

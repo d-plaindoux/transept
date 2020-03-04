@@ -10,8 +10,6 @@ module Make (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
   open Json
   open Parser
 
-  let keywords = []
-
   let null = kwd "null" <$> constant Null
 
   let bool =
