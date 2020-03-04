@@ -1,5 +1,5 @@
 module Lexeme = Transept_genlex.Lexeme
-module Genlex = Transept_genlex.Genlex
+module Genlex = Transept_genlex.Lexer
 
 let keywords = [ "{"; "}"; "["; "]"; ","; ":"; "null"; "true"; "false" ]
 

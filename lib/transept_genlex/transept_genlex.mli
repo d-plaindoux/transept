@@ -1,2 +1,2 @@
 module Lexeme = Lexeme
-module Genlex = Genlex
+module Lexer = Lexer

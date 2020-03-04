@@ -3,7 +3,7 @@ module CharParser = Transept_extension.Parser.For_char_list
 module Stream = Transept_stream.Via_parser (CharParser)
 
 let build s =
-  let module Genlex = Transept_genlex.Genlex.Make (CharParser) in
+  let module Genlex = Transept_genlex.Lexer.Make (CharParser) in
   let keywords = Transept_json.Parser.keywords in
   let tokenizer = Genlex.tokenizer_with_spaces keywords in
   Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s)
