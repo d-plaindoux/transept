@@ -36,7 +36,7 @@ float etc. parsing.
 
 ```ocaml
 module Utils = Transept.Utils
-module CharParser = Transept.Extension.Parser.CharParser
+module CharParser = Transept.Extension.Parser.For_char_list
 module Literals = Transept.Extension.Literals.Make (CharParser)
 ```
 
@@ -100,7 +100,7 @@ parsing using another parser.
 
 ```ocaml
 module Utils = Transept_utils.Utils
-module CharParser = Transept_extension.Parser.CharParser
+module CharParser = Transept_extension.Parser.For_char_list
 module Stream = Transept_stream.Via_parser (CharParser)
 module Genlex = Transept_genlex.Genlex.Make (CharParser)
 ```
