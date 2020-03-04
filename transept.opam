@@ -26,7 +26,7 @@ depends: [
   "odoc" {with-doc}
 ]
 
-synopsis: "Modular generalized parser combinators"
+synopsis: "Generalized parser combinator library"
 description:"""
-Explore generalized parser combinators with a modular approach.
+Explore generalized parser combinator with a strong modular approach.
 """

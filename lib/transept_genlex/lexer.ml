@@ -12,11 +12,10 @@ module Make (Parser : Transept_specs.PARSER with type e = char) = struct
       <$> string_of_chars
     and skipped = optrep s <$> constant () in
     skipped
-    &> ( float
-       <$> (fun e -> Float e)
-       <|> (string <$> (fun e -> String e))
-       <|> (char <$> (fun e -> Char e))
-       <|> (keywords <$> (fun e -> Keyword e)) )
+    &> (keywords <$> (fun e -> Keyword e))
+    <|> (float <$> (fun e -> Float e))
+    <|> (string <$> (fun e -> String e))
+    <|> (char <$> (fun e -> Char e))
     <|> (ident <$> (fun e -> Ident e))
     <& skipped
 
