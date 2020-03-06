@@ -5,13 +5,13 @@ module Make (Parser : Transept_specs.PARSER with type e = char) : sig
 end
 
 module Token (Parser : Transept_specs.PARSER with type e = Lexeme.t) : sig
-  val float : Lexeme.t Parser.t
+  val float : float Parser.t
 
-  val string : Lexeme.t Parser.t
+  val string : string Parser.t
 
-  val char : Lexeme.t Parser.t
+  val char : char Parser.t
 
-  val ident : Lexeme.t Parser.t
+  val ident : string Parser.t
 
-  val kwd : string -> Lexeme.t Parser.t
+  val kwd : string -> string Parser.t
 end

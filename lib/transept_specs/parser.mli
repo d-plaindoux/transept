@@ -2,7 +2,7 @@
 
 (** {1 Structure anatomy} *)
 
-(** Parser core module defining abstract type ands main parsing function *)
+(** Parser core module defining abstract type and main parsing function *)
 module type CORE = sig
   module Response : Response.API
 
