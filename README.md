@@ -4,6 +4,26 @@
 
 An OCaml modular and generalised parser combinator library.
 
+# Installation
+
+Install the library and its dependencies via [OPAM](https://opam.ocaml.org/packages/transept/transept.0.1.0/):
+
+```
+opam install transept
+```
+
+or in your `project-name.opam` dependencies:
+
+```
+...
+depends: [
+  "transept" { >= "0.1.0" }
+  ...
+]  
+...
+```
+
+
 # Parsing arithmetic expressions
 
 ## ADTs definition
