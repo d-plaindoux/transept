@@ -23,10 +23,11 @@ depends: [
 ...
 ```
 
+# Examples
 
-# Parsing arithmetic expressions
+## Parsing arithmetic expressions
 
-## ADTs definition
+### ADTs definition
 
 This example is the traditional arithmetic expression language. This can be represented by the following abstract data 
 types.
@@ -44,11 +45,11 @@ type expr =
   | BinOp of operation * expr * expr
 ```
 
-## Parsers with a direct style 
+### Parsers with a direct style 
 
 Direct style means we parse a stream of characters. In this case all characters are significant even spaces. 
 
-### Required modules
+#### Required modules
 
 `Transept` provides modules in order to help parsers construction. In the next fragment `Utils` contains basic functions 
 like `constant`. The `Parser` module is a is parser dedicated to char stream analysis and `Literals`is dedicated to string, 
@@ -60,7 +61,7 @@ module CharParser = Transept.Extension.Parser.For_char_list
 module Literals = Transept.Extension.Literals.Make (CharParser)
 ```
 
-### Operation parser
+#### Operation parser
 
 Therefore we can propose a first parser dedicated to operations. 
 
@@ -74,7 +75,7 @@ let operator =
     (atom '/' <$> constant Div)
 ```
 
-### Expression parser
+#### Expression parser
 
 Then the simple expression and the expression can be defined by the following parsers.
      
@@ -107,12 +108,12 @@ let parse s =
 
 With this solution we don't skip whitespaces. It means `1+(2+3)` is parsed when `1 + (2 + 3)` is not!  
 
-## The indirect style
+### The indirect style
 
 Since `Transept` is a generalized version, it's possible to parse something other than characters. For this purpose a 
 generic lexer is proposed thanks to the `Genlex` module. 
 
-### Required modules
+#### Required modules
 
 `Transept` provides modules in order to help parsers construction. In the next fragment `Utils` contains basic functions 
 like `constant`. The `CharParser` module is a is parser dedicated to char stream analysis and `Stream`is dedicated to 
@@ -125,7 +126,7 @@ module Stream = Transept_stream.Via_parser (CharParser)
 module Genlex = Transept_genlex.Genlex.Make (CharParser)
 ```
 
-### Main parser
+#### Main parser
 
 ```ocaml
 module Parser =
@@ -138,8 +139,7 @@ module Parser =
 module Token = Transept_genlex.Genlex.Token (Parser) 
 ```
 
-
-### Operation parser
+#### Operation parser
 
 Therefore we can propose a first parser dedicated to operations. 
 
@@ -154,7 +154,7 @@ let operator =
     (kwd "/" <$> constant Div)
 ```
 
-### Expression parser
+#### Expression parser
 
 Then the simple expression and the expression can be defined by the following parsers.
      
@@ -189,6 +189,8 @@ let parse s =
 ```
 
 With this solution whitespaces are skipped by the generic lexer. It means `1 + ( 2+ 3)` is parsed correctly now.  
+
+# Indirect style applied to JSON parsing
 
 A [JSON Parser](https://github.com/d-plaindoux/transept/blob/master/lib/transept_json/parser.ml) has been designed with this approch based on a low level parser producing tokens and a high level parser producing JSON terms from tokens.
 
