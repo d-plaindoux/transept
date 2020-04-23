@@ -6,6 +6,7 @@ module Monadic_via_response (R : Transept_specs.RESPONSE) = struct
     fold (p s)
       (fun (s, a, consumed) -> success (s, f a, consumed))
       (fun (s, consumed) -> failure (s, consumed))
+  ;;
 
   let ( >>= ) p f s =
     let open R in
@@ -15,6 +16,7 @@ module Monadic_via_response (R : Transept_specs.RESPONSE) = struct
           (fun (s, b, consumed_2) -> success (s, b, consumed_1 || consumed_2))
           (fun (s, consumed) -> failure (s, consumed)))
       (fun (s, consumed) -> failure (s, consumed))
+  ;;
 end
 
 module Basic_via_response_and_stream
@@ -28,12 +30,14 @@ struct
   let eos s =
     let open R in
     S.(if is_empty s then success (s, (), false) else failure (s, false))
+  ;;
 
   let any s =
     let open R in
     match S.next s with
-    | Some e, s -> success (s, e, true)
-    | None, s -> failure (s, false)
+    | (Some e, s) -> success (s, e, true)
+    | (None, s) -> failure (s, false)
+  ;;
 end
 
 module Flow_via_response (R : Transept_specs.RESPONSE) = struct
@@ -48,6 +52,7 @@ module Flow_via_response (R : Transept_specs.RESPONSE) = struct
             success (s, (a, b), consumed_1 || consumed_2))
           (fun (s, consumed_2) -> failure (s, consumed_1 || consumed_2)))
       (fun (s, consumed) -> failure (s, consumed))
+  ;;
 
   let ( <& ) pl pr = pl <&> pr <$> fst
 
@@ -58,6 +63,7 @@ module Flow_via_response (R : Transept_specs.RESPONSE) = struct
     fold (pl s)
       (fun (s, a, consumed) -> success (s, a, consumed))
       (fun (s', consumed) -> if consumed then failure (s', consumed) else pr s)
+  ;;
 
   let ( <?> ) p f s =
     let open R in
@@ -65,6 +71,7 @@ module Flow_via_response (R : Transept_specs.RESPONSE) = struct
       (fun (s, a, consumed) ->
         if f a then success (s, a, consumed) else failure (s, false))
       (fun (s, _) -> failure (s, false))
+  ;;
 
   let to_list p = p <$> (fun (e, l) -> e :: l)
 end
@@ -75,6 +82,7 @@ module Execution_via_response (R : Transept_specs.RESPONSE) = struct
     fold (p s)
       (fun (s, a, consumed) -> success (s, a, consumed))
       (fun (s, _) -> failure (s, false))
+  ;;
 
   let do_lazy p s = p () s
 
@@ -83,6 +91,7 @@ module Execution_via_response (R : Transept_specs.RESPONSE) = struct
     fold (p s)
       (fun (_, a, _) -> success (s, a, false))
       (fun (s, b) -> failure (s, b))
+  ;;
 end
 
 module Atomic_via_response_and_stream
@@ -99,6 +108,7 @@ struct
 
   let not p s =
     R.(fold (p s) (fun (s, _, _) -> failure (s, false)) (fun _ -> any s))
+  ;;
 
   let atom e = any <?> (fun e' -> e' = e)
 
@@ -110,6 +120,7 @@ struct
     let open List in
     do_try (fold_left (fun p e -> p <& atom e) (return ()) l)
     <$> Utils.constant l
+  ;;
 end
 
 module Repeatable_via_response
@@ -138,6 +149,7 @@ struct
           else failure (s', b || b'))
     in
     sequence s [] false
+  ;;
 
   let optrep p = sequence true p
 

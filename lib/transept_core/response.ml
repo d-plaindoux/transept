@@ -7,4 +7,5 @@ module Basic = struct
 
   let fold response fSuccess fFailure =
     (match response with Ok v -> fSuccess v | Error v -> fFailure v)
+  ;;
 end

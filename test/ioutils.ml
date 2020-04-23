@@ -12,3 +12,4 @@ let read_fully filename =
   | End_of_file ->
     close_in chan;
     !text
+;;

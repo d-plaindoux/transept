@@ -11,3 +11,4 @@ let () =
     ; Json_parser.test_cases
     ; Stream_parser.test_cases
     ]
+;;

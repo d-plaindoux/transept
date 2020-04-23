@@ -1,4 +1,4 @@
-version = 0.13.0
+version = 0.14.1
 margin = 80
 max-indent = 68
 
@@ -54,7 +54,7 @@ leading-nested-match-parens = false
 
 let-and = sparse
 let-binding-indent = 2
-let-binding-spacing = compact
+let-binding-spacing = double-semicolon
 let-module = compact
 let-open = auto
 
@@ -63,8 +63,8 @@ match-indent-nested = never
 module-item-spacing = sparse
 nested-match = wrap
 
-parens-tuple = multi-line-only
-parens-tuple-patterns = multi-line-only
+parens-tuple = always
+parens-tuple-patterns = always
 
 parse-docstrings = true
 

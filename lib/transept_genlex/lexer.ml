@@ -18,6 +18,7 @@ module Make (Parser : Transept_specs.PARSER with type e = char) = struct
     <|> (char <$> (fun e -> Char e))
     <|> (ident <$> (fun e -> Ident e))
     <& skipped
+  ;;
 
   let tokenizer_with_spaces l = tokenizer spaces l
 end

@@ -6,5 +6,6 @@ let pp ppf = function
   | Char value -> Format.fprintf ppf "'%c'" value
   | Ident value -> Format.fprintf ppf "%s" value
   | Keyword value -> Format.fprintf ppf "%s" value
+;;
 
 let to_string = Format.asprintf "%a" pp

@@ -7,28 +7,32 @@ let build p s = Stream.build p (Parser.Stream.build @@ Utils.chars_of_string s)
 
 let tokenizer =
   Parser.(opt Literals.spaces &> Literals.ident <& opt Literals.spaces)
+;;
 
-let result (a, s) = a, Stream.position s
+let result (a, s) = (a, Stream.position s)
 
 let should_read_a_string () =
-  let expected = Some "hello", 6
+  let expected = (Some "hello", 6)
   and computed = result @@ Stream.next (build tokenizer "hello world") in
   Alcotest.(check (pair (option string) int))
     "should_read_a_string" expected computed
+;;
 
 let should_read_a_second_string () =
-  let expected = Some "world", 11
+  let expected = (Some "world", 11)
   and computed =
     result @@ Stream.next @@ snd @@ Stream.next @@ build tokenizer "hello world"
   in
   Alcotest.(check (pair (option string) int))
     "should_read_a_second_string" expected computed
+;;
 
 let should_read_nothing () =
-  let expected = None, 0
+  let expected = (None, 0)
   and computed = result @@ Stream.next (build tokenizer "") in
   Alcotest.(check (pair (option string) int))
     "should_read_a_second_string" expected computed
+;;
 
 let should_read_all_tokens () =
   let module Iterator = Transept_stream.Iterator (Stream) in
@@ -36,6 +40,7 @@ let should_read_all_tokens () =
   let expected = [ "This"; "is"; "a"; "test" ]
   and computed = to_list (build tokenizer "This is a test") in
   Alcotest.(check (list string)) "should_read_all_tokens" expected computed
+;;
 
 let test_cases =
   ( "Try stream from parser"
@@ -46,3 +51,4 @@ let test_cases =
     ; test_case "Should read nothing" `Quick should_read_nothing
     ; test_case "Should read all tokens" `Quick should_read_all_tokens
     ] )
+;;

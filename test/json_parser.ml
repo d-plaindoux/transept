@@ -7,6 +7,7 @@ let build s =
   let keywords = Transept_json.Parser.keywords in
   let tokenizer = Genlex.tokenizer_with_spaces keywords in
   Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s)
+;;
 
 module Parser =
   Transept_core.Parser.Make_via_stream
@@ -23,149 +24,163 @@ module Json_pp = Transept_json.PrettyPrinter
 let json = Alcotest.testable Json_pp.pp (Json_pp.eq ( = ))
 
 let should_parse_null () =
-  let expected = (Some Json.Null, true), 4
+  let expected = ((Some Json.Null, true), 4)
   and computed =
     Response.fold
       (Parser.parse Json_parser.null (build "null"))
-      (fun (s, a, c) -> (Some a, c), Parser.Stream.position s)
-      (fun (s, c) -> (None, c), Parser.Stream.position s)
+      (fun (s, a, c) -> ((Some a, c), Parser.Stream.position s))
+      (fun (s, c) -> ((None, c), Parser.Stream.position s))
   in
   Alcotest.(check (pair (pair (option json) bool) int))
     "should_parse_null" expected computed
+;;
 
 let should_parse_true () =
-  let expected = Some (Json.Bool true), true
+  let expected = (Some (Json.Bool true), true)
   and computed =
     Response.fold
       (Parser.parse Json_parser.bool (build "true"))
-      (fun (_, a, c) -> Some a, c)
-      (fun (_, c) -> None, c)
+      (fun (_, a, c) -> (Some a, c))
+      (fun (_, c) -> (None, c))
   in
   Alcotest.(check (pair (option json) bool))
     "should_parse_true" expected computed
+;;
 
 let should_parse_false () =
-  let expected = Some (Json.Bool false), true
+  let expected = (Some (Json.Bool false), true)
   and computed =
     Response.fold
       (Parser.parse Json_parser.bool (build "false"))
-      (fun (_, a, c) -> Some a, c)
-      (fun (_, c) -> None, c)
+      (fun (_, a, c) -> (Some a, c))
+      (fun (_, c) -> (None, c))
   in
   Alcotest.(check (pair (option json) bool))
     "should_parse_false" expected computed
+;;
 
 let should_parse_float () =
-  let expected = Some (Json.Number 12.3), true
+  let expected = (Some (Json.Number 12.3), true)
   and computed =
     Response.fold
       (Parser.parse Json_parser.number (build "12.3"))
-      (fun (_, a, c) -> Some a, c)
-      (fun (_, c) -> None, c)
+      (fun (_, a, c) -> (Some a, c))
+      (fun (_, c) -> (None, c))
   in
   Alcotest.(check (pair (option json) bool))
     "should_parse_float" expected computed
+;;
 
 let should_parse_string () =
-  let expected = Some (Json.String "Hello"), true
+  let expected = (Some (Json.String "Hello"), true)
   and computed =
     Response.fold
       (Parser.parse Json_parser.string (build "\"Hello\""))
-      (fun (_, a, c) -> Some a, c)
-      (fun (_, c) -> None, c)
+      (fun (_, a, c) -> (Some a, c))
+      (fun (_, c) -> (None, c))
   in
   Alcotest.(check (pair (option json) bool))
     "should_parse_float" expected computed
+;;
 
 let should_parse_empty_array () =
-  let expected = Some (Json.Array []), true
+  let expected = (Some (Json.Array []), true)
   and computed =
     Response.fold
       (Parser.parse (Json_parser.array ()) (build "[]"))
-      (fun (_, a, c) -> Some a, c)
-      (fun (_, c) -> None, c)
+      (fun (_, a, c) -> (Some a, c))
+      (fun (_, c) -> (None, c))
   in
   Alcotest.(check (pair (option json) bool))
     "should_parse_empty_array" expected computed
+;;
 
 let should_parse_array_with_singleton () =
-  let expected = Some (Json.Array [ Json.Number 12.0 ]), true
+  let expected = (Some (Json.Array [ Json.Number 12.0 ]), true)
   and computed =
     Response.fold
       (Parser.parse (Json_parser.array ()) (build "[ 12 ]"))
-      (fun (_, a, c) -> Some a, c)
-      (fun (_, c) -> None, c)
+      (fun (_, a, c) -> (Some a, c))
+      (fun (_, c) -> (None, c))
   in
   Alcotest.(check (pair (option json) bool))
     "should_parse_array_with_singleton" expected computed
+;;
 
 let should_parse_array () =
   let expected =
-    Some (Json.Array [ Json.Number 12.0; Json.String "toto" ]), true
+    (Some (Json.Array [ Json.Number 12.0; Json.String "toto" ]), true)
   and computed =
     Response.fold
       (Parser.parse (Json_parser.array ()) (build "[ 12, \"toto\" ]"))
-      (fun (_, a, c) -> Some a, c)
-      (fun (_, c) -> None, c)
+      (fun (_, a, c) -> (Some a, c))
+      (fun (_, c) -> (None, c))
   in
   Alcotest.(check (pair (option json) bool))
     "should_parse_array" expected computed
+;;
 
 let should_parse_empty_record () =
-  let expected = Some (Json.Record []), true
+  let expected = (Some (Json.Record []), true)
   and computed =
     Response.fold
       (Parser.parse (Json_parser.record ()) (build "{}"))
-      (fun (_, a, c) -> Some a, c)
-      (fun (_, c) -> None, c)
+      (fun (_, a, c) -> (Some a, c))
+      (fun (_, c) -> (None, c))
   in
   Alcotest.(check (pair (option json) bool))
     "should_parse_empty_record" expected computed
+;;
 
 let should_parse_record_with_singleton () =
-  let expected = Some (Json.Record [ "a", Json.Number 12.0 ]), true
+  let expected = (Some (Json.Record [ ("a", Json.Number 12.0) ]), true)
   and computed =
     Response.fold
       (Parser.parse (Json_parser.record ()) (build "{ \"a\": 12 }"))
-      (fun (_, a, c) -> Some a, c)
-      (fun (_, c) -> None, c)
+      (fun (_, a, c) -> (Some a, c))
+      (fun (_, c) -> (None, c))
   in
   Alcotest.(check (pair (option json) bool))
     "should_parse_record_with_singleton" expected computed
+;;
 
 let should_parse_record () =
   let expected =
-    Some (Json.Record [ "a", Json.Number 12.0; "b", Json.Array [] ]), true
+    (Some (Json.Record [ ("a", Json.Number 12.0); ("b", Json.Array []) ]), true)
   and computed =
     Response.fold
       (Parser.parse (Json_parser.record ())
          (build "{ \"a\" : 12, \"b\" : [] }"))
-      (fun (_, a, b) -> Some a, b)
-      (fun (_, b) -> None, b)
+      (fun (_, a, b) -> (Some a, b))
+      (fun (_, b) -> (None, b))
   in
   Alcotest.(check (pair (option json) bool))
     "should_parse_record" expected computed
+;;
 
 let should_parse_json () =
   let expected =
     ( Some
         (Json.Record
            [
-             "a", Json.Number 12.0
+             ("a", Json.Number 12.0)
            ; ( "b"
              , Json.Array
-                 [ Json.Record [ "a", Json.Number 12.0; "b", Json.Array [] ] ] )
+                 [
+                   Json.Record [ ("a", Json.Number 12.0); ("b", Json.Array []) ]
+                 ] )
            ])
     , true )
   and computed =
     Response.fold
       (Parser.parse (Json_parser.json ())
          (build "{ \"a\" : 12, \"b\" : [{ \"a\" : 12, \"b\" : [] }] }"))
-      (fun (_, a, b) -> Some a, b)
-      (fun (_, b) -> None, b)
+      (fun (_, a, b) -> (Some a, b))
+      (fun (_, b) -> (None, b))
   in
   Alcotest.(check (pair (option json) bool))
     "should_parse_json" expected computed
+;;
 
 let should_parse_a_large_json () =
   let content = Ioutils.read_fully "samples/127k.json" in
@@ -178,18 +193,20 @@ let should_parse_a_large_json () =
         "Error at char <" ^ (string_of_int @@ Stream.position s) ^ ">\n")
   in
   Alcotest.(check string) "should_parse_a_large_json" expected computed
+;;
 
 let should_parse_a_json_not_well_formed () =
   let content = Ioutils.read_fully "samples/nwff.json" in
-  let expected = false, 17
+  let expected = (false, 17)
   and computed =
     Response.fold
       (Parser.parse (Json_parser.json ()) (build content))
-      (fun (s, _, _) -> true, Stream.position s)
-      (fun (s, _) -> false, Stream.position s)
+      (fun (s, _, _) -> (true, Stream.position s))
+      (fun (s, _) -> (false, Stream.position s))
   in
   Alcotest.(check (pair bool int))
     "should_parse_a_json_not_well_formed" expected computed
+;;
 
 let test_cases =
   ( "Try json parsers"
@@ -213,3 +230,4 @@ let test_cases =
     ; test_case "Should parse a json not well formed" `Quick
         should_parse_a_json_not_well_formed
     ] )
+;;
