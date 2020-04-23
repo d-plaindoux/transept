@@ -26,13 +26,13 @@ end
 module Token (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
   open Parser
 
-  let float = any <?> (function Lexeme.Float _ -> true | _ -> false)
+  let float = any >>= (function Lexeme.Float f -> return f | _ -> fail)
 
-  let string = any <?> (function Lexeme.String _ -> true | _ -> false)
+  let string = any >>= (function Lexeme.String s -> return s | _ -> fail)
 
-  let char = any <?> (function Lexeme.Char _ -> true | _ -> false)
+  let char = any >>= (function Lexeme.Char c -> return c | _ -> fail)
 
-  let ident = any <?> (function Lexeme.Ident _ -> true | _ -> false)
+  let ident = any >>= (function Lexeme.Ident i -> return i | _ -> fail)
 
-  let kwd s = any <?> (fun a -> a = Lexeme.Keyword s)
+  let kwd s = any >>= (fun a -> if a = Lexeme.Keyword s then return s else fail)
 end

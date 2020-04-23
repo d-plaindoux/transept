@@ -18,18 +18,12 @@ module Make (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
     <|> (kwd "false" <$> constant @@ Bool false)
   ;;
 
-  (** Unable to use GADT *)
-  let stringValue =
-    string <$> (function Lexeme.String s -> s | _ -> failwith "Impossible")
-  ;;
+  let string_value = string
 
-  let string = stringValue <$> (function s -> String s)
+  let string = string_value <$> (function s -> String s)
 
   (** Unable to use GADT *)
-  let number =
-    float
-    <$> (function Lexeme.Float f -> Number f | _ -> failwith "Impossible")
-  ;;
+  let number = float <$> (function f -> Number f)
 
   let rec array () =
     let item = do_lazy json in
@@ -41,7 +35,7 @@ module Make (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
 
   and record () =
     let item = do_lazy json in
-    let attribute = stringValue <& kwd ":" <&> item in
+    let attribute = string_value <& kwd ":" <&> item in
     kwd "{"
     &> opt (attribute <&> optrep (kwd "," &> attribute))
     <& kwd "}"
