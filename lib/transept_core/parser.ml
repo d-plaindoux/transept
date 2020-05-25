@@ -41,7 +41,7 @@ struct
 end
 
 module Flow_via_response (R : Transept_specs.RESPONSE) = struct
-  open Monadic_via_response (R) (* TODO review this code ASAP *)
+  open Monadic_via_response (R)
 
   let ( <&> ) pl pr s =
     let open R in
@@ -98,13 +98,13 @@ module Atomic_via_response_and_stream
     (R : Transept_specs.RESPONSE)
     (S : Transept_specs.STREAM) =
 struct
-  open Basic_via_response_and_stream (R) (S) (* TODO review this code ASAP *)
+  open Basic_via_response_and_stream (R) (S)
 
-  open Monadic_via_response (R) (* TODO review this code ASAP *)
+  open Monadic_via_response (R)
 
-  open Execution_via_response (R) (* TODO review this code ASAP *)
+  open Execution_via_response (R)
 
-  open Flow_via_response (R) (* TODO review this code ASAP *)
+  open Flow_via_response (R)
 
   let not p s =
     R.(fold (p s) (fun (s, _, _) -> failure (s, false)) (fun _ -> any s))
@@ -127,13 +127,13 @@ module Repeatable_via_response
     (R : Transept_specs.RESPONSE)
     (S : Transept_specs.STREAM) =
 struct
-  open Basic_via_response_and_stream (R) (S) (* TODO review this code ASAP *)
+  open Basic_via_response_and_stream (R) (S)
 
-  open Monadic_via_response (R) (* TODO review this code ASAP *)
+  open Monadic_via_response (R)
 
-  open Execution_via_response (R) (* TODO review this code ASAP *)
+  open Execution_via_response (R)
 
-  open Flow_via_response (R) (* TODO review this code ASAP *)
+  open Flow_via_response (R)
 
   let opt p = p <$> (fun e -> Some e) <|> return None
 
@@ -144,9 +144,9 @@ struct
       fold (p s)
         (fun (s, a, b') -> sequence s (a :: aux) (b || b'))
         (fun (s', b') ->
-          if aux != [] || optional
-          then success (s, List.rev aux, b || b')
-          else failure (s', b || b'))
+          if b' || (aux = [] && not optional)
+          then failure (s', b || b')
+          else success (s, List.rev aux, b || b'))
     in
     sequence s [] false
   ;;
