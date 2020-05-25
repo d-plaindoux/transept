@@ -197,7 +197,7 @@ let should_parse_a_large_json () =
 
 let should_parse_a_json_not_well_formed () =
   let content = Ioutils.read_fully "samples/nwff.json" in
-  let expected = (false, 17)
+  let expected = (false, 38)
   and computed =
     Response.fold
       (Parser.parse (Json_parser.json ()) (build content))
