@@ -4,7 +4,7 @@ module Genlex = Transept_genlex.Lexer
 let keywords = [ "{"; "}"; "["; "]"; ","; ":"; "null"; "true"; "false" ]
 
 module Make (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
-  open Genlex.Token (Parser)
+  open Lexeme.Make (Parser)
 
   open Transept_utils.Utils
   open Json

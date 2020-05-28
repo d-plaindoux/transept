@@ -1,3 +1,8 @@
 # 0.1.0 (2020-03-04)
 
 Initial version
+
+# 0.2.0 (...)
+
+- Issue fixed related to optrep and rep parsers.
+- Review Lexeme library. The Genlex Token has been moved into the Lexeme.

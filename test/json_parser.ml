@@ -5,17 +5,12 @@ module Stream = Transept_stream.Via_parser (CharParser)
 let build s =
   let module Genlex = Transept_genlex.Lexer.Make (CharParser) in
   let keywords = Transept_json.Parser.keywords in
-  let tokenizer = Genlex.tokenizer_with_spaces keywords in
+  let tokenizer = Genlex.tokenizer keywords in
   Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s)
 ;;
 
 module Parser =
-  Transept_core.Parser.Make_via_stream
-    (Stream)
-    (struct
-      type t = Transept_genlex.Lexeme.t
-    end)
-
+  Transept_core.Parser.Make_via_stream (Stream) (Transept_genlex.Lexeme)
 module Json = Transept_json.Type
 module Json_parser = Transept_json.Parser.Make (Parser)
 module Response = Parser.Response
