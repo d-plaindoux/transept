@@ -1,4 +1,4 @@
-(** Basic functions *)
+(** {1 Basic functions} *)
 
 val constant : 'a -> 'b -> 'a
 (** Produce a function that returns its first argument. [const a b] returns
@@ -17,3 +17,7 @@ val chars_of_string : string -> char list
 
 val string_of_chars : char list -> string
 (** Transform a characters list to a string. *)
+
+(** {1 Shadowing the [Stdlib]} *)
+
+include module type of Stdlib.Fun

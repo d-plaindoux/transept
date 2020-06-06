@@ -120,10 +120,10 @@ like `constant`. The `CharParser` module is a is parser dedicated to char stream
 parsing using another parser.
 
 ```ocaml
-module Utils = Transept.Utils.Utils
-module CharParser = Transept.Extension.Parser.For_char_list
-module Stream = Transept.Stream.Via_parser (CharParser)
-module Genlex = Transept.Genlex.Genlex.Make (CharParser)
+module Utils = Transept.Utils.Fun
+module Parser = Transept.Extension.Parser.For_char_list
+module Stream = Transept.Stream.Via_parser (Parser)
+module Genlex = Transept.Genlex.Lexer.Make (Parser)
 ```
 
 #### Main parser
@@ -176,7 +176,7 @@ let expr =
     in expr ()
 ```
 
-Finally a sentence can be parsed using parsers. First one `CharParser` parses char stream and is used by the `Genlex` in order to create a stream
+Finally, a sentence can be parsed using parsers. First one `CharParser` parses char stream and is used by the `Genlex` in order to create a stream
 of lexemes. The second one `Parser` is used to parse the previous lexeme stream.
 
 ```ocaml

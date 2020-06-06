@@ -6,7 +6,7 @@ let keywords = [ "{"; "}"; "["; "]"; ","; ":"; "null"; "true"; "false" ]
 module Make (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
   open Lexeme.Make (Parser)
 
-  open Transept_utils.Utils
+  open Transept_utils.Fun
   open Json
   open Parser
 
@@ -22,7 +22,6 @@ module Make (Parser : Transept_specs.PARSER with type e = Lexeme.t) = struct
 
   let string = string_value <$> (function s -> String s)
 
-  (** Unable to use GADT *)
   let number = float <$> (function f -> Number f)
 
   let rec array () =

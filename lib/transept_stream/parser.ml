@@ -20,7 +20,7 @@ module Make (Parser : Transept_specs.PARSER) = struct
       | (_, s) ->
         let open Parser in
         let open Parser.Response in
-        let open Transept_utils.Utils in
+        let open Transept_utils.Fun in
         fold (parse eos s) (constant true) (constant false)
     ;;
 
