@@ -11,3 +11,5 @@ let string_of_chars chars =
   List.iter (Buffer.add_char buf) chars;
   Buffer.contents buf
 ;;
+
+include Stdlib.Fun

@@ -1,8 +1,10 @@
 module Make (Parser : Transept_specs.PARSER with type e = char) = struct
-  open Transept_utils.Utils
+  open Transept_utils.Fun
   open Parser
 
-  let spaces = in_list [ ' '; '\t'; '\r'; '\n' ] <$> constant ()
+  let space = in_list [ ' '; '\t'; '\r'; '\n' ]
+
+  let spaces = rep space <$> string_of_chars
 
   let alpha = in_range 'a' 'z' <|> in_range 'A' 'Z'
 

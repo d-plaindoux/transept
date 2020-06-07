@@ -69,10 +69,10 @@ Therefore we can propose a first parser dedicated to operations.
 let operator = 
     let open Utils in
     let open CharParser in
-    (atom '+' <$> constant Add)   <|>
-    (atom '-' <$> constant Minus) <|>
-    (atom '*' <$> constant Mult)  <|>
-    (atom '/' <$> constant Div)
+        (atom '+' <$> constant Add) 
+    <|> (atom '-' <$> constant Minus)
+    <|> (atom '*' <$> constant Mult)
+    <|> (atom '/' <$> constant Div)
 ```
 
 #### Expression parser
@@ -97,7 +97,7 @@ let expr =
     in expr
 ```
 
-Finally a sentence can be easily parsed.
+Finally, a sentence can be easily parsed.
 
 ```ocaml
 let parse s =
@@ -120,38 +120,38 @@ like `constant`. The `CharParser` module is a is parser dedicated to char stream
 parsing using another parser.
 
 ```ocaml
-module Utils = Transept_utils.Utils
-module CharParser = Transept_extension.Parser.For_char_list
-module Stream = Transept_stream.Via_parser (CharParser)
-module Genlex = Transept_genlex.Genlex.Make (CharParser)
+module Utils = Transept.Utils.Fun
+module Parser = Transept.Extension.Parser.For_char_list
+module Stream = Transept.Stream.Via_parser (Parser)
+module Genlex = Transept.Genlex.Lexer.Make (Parser)
 ```
 
 #### Main parser
 
 ```ocaml
 module Parser =
-  Transept_core.Parser.Make_via_stream
+  Transept.Core.Parser.Make_via_stream
     (Stream)
     (struct
-      type t = Transept_genlex.Lexeme.t
+      type t = Transept.Genlex.Lexeme.t
     end)
 
-module Token = Transept_genlex.Genlex.Token (Parser) 
+module Token = Transept.Genlex.Lexeme.Make (Parser) 
 ```
 
 #### Operation parser
 
-Therefore we can propose a first parser dedicated to operations. 
+Therefore, we can propose a first parser dedicated to operations. 
 
 ```ocaml
 let operator = 
     let open Utils in
     let open Parser in
     let open Token in
-    (kwd "+" <$> constant Add)   <|>
-    (kwd "-" <$> constant Minus) <|>
-    (kwd "*" <$> constant Mult)  <|>
-    (kwd "/" <$> constant Div)
+        (kwd "+" <$> constant Add)  
+    <|> (kwd "-" <$> constant Minus)
+    <|> (kwd "*" <$> constant Mult)
+    <|> (kwd "/" <$> constant Div)
 ```
 
 #### Expression parser
@@ -163,7 +163,7 @@ let expr =
     (* sexpr ::= float | '(' expr ')' *)
     let rec sexpr () =
       let open Parser in
-      let open Token in
+      let open Lexeme in
       float <$> (fun f -> Number f) <|> (kwd "(" &> do_lazy expr <& kwd ")")
     
     (* expr ::= sexpr (operator expr)? *)
@@ -173,19 +173,19 @@ let expr =
       | e1, None -> e1
       | e1, Some (op, e2) -> BinOp (op, e1, e2)
     
-    in expr
+    in expr ()
 ```
 
-Finally a sentence can be parsed using parsers. First one `CharParser` parses char stream and is used by the `Genlex` in order to create a stream
+Finally, a sentence can be parsed using parsers. First one `CharParser` parses char stream and is used by the `Genlex` in order to create a stream
 of lexemes. The second one `Parser` is used to parse the previous lexeme stream.
 
 ```ocaml
 let parse s =
     let open Utils in
-    let open Parser in
-    let tokenizer = Genlex.tokenizer_with_spaces ["+"; "/"; "*"; "/"; "("; ")"] in
-    let stream = Stream.build tokenizer (CharParser.Stream.build @@ Utils.chars_of_string s) in
-    parse (expr ()) stream
+    let open Parser in 
+    let parser = CharParser.Stream.build @@ Utils.chars_of_string s in
+    let stream = Stream.build Genlex.tokenizer parser in
+    parse (expr <& eos) stream
 ```
 
 With this solution whitespaces are skipped by the generic lexer. It means `1 + ( 2+ 3)` is parsed correctly now.  

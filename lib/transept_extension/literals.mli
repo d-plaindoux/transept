@@ -1,5 +1,7 @@
 module Make (Parser : Transept_specs.PARSER with type e = char) : sig
-  val spaces : unit Parser.t
+  val space : char Parser.t
+
+  val spaces : string Parser.t
 
   val alpha : char Parser.t
 

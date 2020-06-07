@@ -1,6 +1,6 @@
 (** The [Transept_utils] provides basic function and modules used by [Transept] *)
 
-module Utils = Utils
+module Fun = Fun
 (** Describes the basic functions *)
 
 module Iterator = Iterator
