@@ -4,5 +4,6 @@ Initial version
 
 # 0.2.0 (...)
 
-- Issue fixed related to optrep and rep parsers.
+- Issue fixed related to optrep and rep parsers (cf. issue #3)
 - Review Lexeme library. The Genlex Token has been moved into the Lexeme.
+- Utils module has been renamed Fun
