@@ -24,7 +24,7 @@ module CORE : sig
       number of read elements from the stream. *)
 
   val is_empty : 'a t -> bool
-  (** Predicate checking is the stream has at least one element or not. *)
+  (** Predicate checking if the stream has at least one element or not. *)
 
   val next : 'a t -> 'a option * 'a t
   (** Provide the next token if possible and the next stream. *)
