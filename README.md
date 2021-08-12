@@ -116,7 +116,7 @@ generic lexer is proposed thanks to the `Genlex` module.
 #### Required modules
 
 `Transept` provides modules in order to help parsers construction. In the next fragment `Utils` contains basic functions 
-like `constant`. The `CharParser` module is a is parser dedicated to char stream analysis and `Stream`is dedicated to 
+like `constant`. The `CharParser` module is a parser dedicated to char stream analysis and `Stream`is dedicated to 
 parsing using another parser.
 
 ```ocaml
