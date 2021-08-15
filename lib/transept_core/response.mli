@@ -1,1 +1,1 @@
-module Basic : Transept_specs.RESPONSE
+module Response : Transept_specs.RESPONSE

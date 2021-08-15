@@ -2,43 +2,36 @@
 
 (** {1 Structure anatomy} *)
 
-(** Parser core module defining abstract type and main parsing function *)
-module type CORE = sig
+(** Parser context module defining required module type *)
+module type CONTEXT = sig
   module Response : Response.API
 
   module Stream : Stream.API
+end
 
-  type e
+(** Parser core module defining abstract type and main parsing function *)
+module type CORE  =sig
+  module Context : CONTEXT
+
+  type e = Context.Stream.e
   (** The element abstract type. Elements are provided by the stream used during
       the parsing. *)
 
   type _ t
   (** The parse abstract type *)
 
-  val parse : 'a t -> e Stream.t -> (e Stream.t, 'a) Response.t
+  val parse : 'a t -> e Context.Stream.t -> (e Context.Stream.t, 'a) Context.Response.t
   (** Main parse function. It takes a [Parser.t] type, a [Stream] of elements
       and returns a [Response.t]. *)
 end
 
 (** Definition for monadic parser *)
-module type MONAD = sig
-  type _ t
-  (** The parse abstract type *)
-
-  val ( <$> ) : 'a t -> ('a -> 'b) -> 'b t
-  (** Mapping over from ['a] to ['b] over ['a t] to ['b t]. *)
-
-  val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
-  (** [m >>= f] passes the result of computation [m] to function [f]. *)
-end
+module type MONAD = Preface.Specs.MONAD_PLUS
 
 (** Define basic parser. *)
 module type BASIC = sig
   type _ t
   (** The parse abstract type *)
-
-  val return : 'a -> 'a t
-  (** Parser return a success with the parametric value. *)
 
   val fail : 'a t
   (** Parser return a failure. *)
@@ -61,13 +54,11 @@ module type FLOW = sig
   val ( <& ) : 'a t -> 'b t -> 'a t
   (** Parser dedicated to parser sequence removing the right parser result. *)
 
-  val ( <|> ) : 'a t -> 'a t -> 'a t
+  val ( <|> ) : 'a t -> 'b t -> ('a,'b) Either.t t
   (** Parser dedicated to parser disjunction. *)
 
   val ( <?> ) : 'a t -> ('a -> bool) -> 'a t
   (** Parser dedicated to parser satifying a given predicate. *)
-
-  val to_list : ('a * 'a list) t -> 'a list t
 end
 
 (** Define execution parser like backtracking, lazy or lookahead. *)
@@ -80,6 +71,15 @@ module type EXECUTION = sig
 
   val do_lazy : (unit -> 'a t) -> 'a t
   (** Define a lazy parser. *)
+
+  val lookahead : 'a t -> 'a t
+  (** Define a lookahead parser. *)
+end
+
+(** Define speculative parser like lookahead. *)
+module type SPECULATIVE = sig
+  type _ t
+  (** The parse abstract type *)
 
   val lookahead : 'a t -> 'a t
   (** Define a lookahead parser. *)
@@ -133,7 +133,7 @@ end
 module type API = sig
   include CORE
 
-  include MONAD with type 'a t := 'a t
+  include MONAD  with type 'a t := 'a t
 
   include BASIC with type 'a t := 'a t
 
@@ -141,9 +141,9 @@ module type API = sig
 
   include EXECUTION with type 'a t := 'a t
 
+  include SPECULATIVE with type 'a t := 'a t
+
   include ATOMIC with type 'a t := 'a t and type e := e
 
   include REPEATABLE with type 'a t := 'a t
-
-  include MONAD with type 'a t := 'a t
 end

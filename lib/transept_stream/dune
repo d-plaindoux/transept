@@ -1,5 +1,0 @@
-(library
- (name transept_stream)
- (public_name transept.stream)
- (modules_without_implementation transept_stream)
- (libraries transept.specs transept.utils))

@@ -1,32 +1,19 @@
+
 (** Define the [Stream]. This module provides basic operations used to read one
     by one elements from a stream. *)
 
-(** A [Builder] has the capability to build a stream from an alternate data. The
-    corresponding type is abstract and strongly linked to the [CORE] module. *)
-module type BUILDER = sig
-  type _ t
-
-  val build : 'a t
-  (** Creates a stream. *)
-end
+(* Can we replace it by a comonad? *)
 
 module CORE : sig
+  type e
+
   type _ t
   (** The abstract type used for the stream denotation. *)
 
-  module Builder : BUILDER
+  val is_empty : e t -> bool
+  (** Predicate checking if the stream has at least one element or not. *)
 
-  val build : 'a Builder.t
-  (** Build a fresh [Stream] using the parametric parser and a stream. *)
-
-  val position : 'a t -> int
-  (** Provides the current absolute position in the stream. This reflect the
-      number of read elements from the stream. *)
-
-  val is_empty : 'a t -> bool
-  (** Predicate checking is the stream has at least one element or not. *)
-
-  val next : 'a t -> 'a option * 'a t
+  val next : e t -> e option * e t
   (** Provide the next token if possible and the next stream. *)
 end
 
